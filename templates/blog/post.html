@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<h1 class="display-3 mb-2">{{ post.title }}</h1> <small class="text-muted mb-4">by {{ post.creator }}
+<br><br><br><br>
+<p class="lead">{{ post.content|linebreaks }}</p>
+<br>
+<small class="text-muted">posted on {{ post.created }}</small>
+<br>
+Tagged under <a href="{% url 'topic' post.topic.id %}">{{ post.topic }}</a>
+<hr>
+<br> 
+{% with comments.count as total_comments %}
+<h2>
+    {{ total_comments }} comment{{ total_comments|pluralize }}
+</h2>
+
+<br>
+{% endwith %}
+
+{% for comment in comments %}
+<p>
+    <small class="text-muted">commented by {{ comment.commenter }} on {{ comment.created }}</small>
+    <br>
+    {{ comment.body|linebreaks }}
+</p>
+<hr>
+{% endfor %}
+<br>
+<form action="" method="post">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <button type="submit" class="btn btn-sm btn-primary">Comment</button>
+</form>
+<br>
+<br>
+{% endblock %}
+
